@@ -274,10 +274,10 @@ void GameScene::ChangePhase() {
 			}
 		}
 
-		if (Count_ == 10) {
+		/*if (Count_ == 10) {
 			
 			phaseScene_ = PhaseScene::kClear;
-		} 
+		} */
 
 		
 		ImGui::Begin("Data");
@@ -567,8 +567,13 @@ void GameScene::UpdateEnemyPopCommands(int currentStage) {
 
 void GameScene::NextStage() {
 	currentStage_++;
-	deadCount_ = 0;
-	enemyCountInCurrentStage_ = 0;
-	
-	LoadEnemyPopData(currentStage_);
+
+	if (currentStage_ > 11) { // 最終ステージをクリアしたらゲームクリア
+		phaseScene_ = PhaseScene::kClear;
+	}
+	else {
+		deadCount_ = 0;
+		enemyCountInCurrentStage_ = 0;
+		LoadEnemyPopData(currentStage_);
+	}
 }

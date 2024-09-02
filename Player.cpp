@@ -236,19 +236,19 @@ void Player::GetMousePosition() {
 			float thumbRY = (float)joyState.Gamepad.sThumbRY / SHRT_MAX;
 
 			// デッドゾーンの設定
-			const float DEADZONE = 0.15f;
+			const float DEADZONE = 0.2f;
 			if (fabs(thumbRX) < DEADZONE)
 				thumbRX = 0.0f;
 			if (fabs(thumbRY) < DEADZONE)
 				thumbRY = 0.0f;
 
 			// 線形補間を使用してスムーズにする
-			float smoothThumbRX = Lerp(prevThumbRX, thumbRX, 0.05f);
-			float smoothThumbRY = Lerp(prevThumbRY, thumbRY, 0.05f);
+			float smoothThumbRX = Lerp(prevThumbRX, thumbRX, 0.06f);
+			float smoothThumbRY = Lerp(prevThumbRY, thumbRY, 0.06f);
 
 			// スプライトの位置を更新
-			sprite2DPosition.x += smoothThumbRX * 300.0f;
-			sprite2DPosition.y -= smoothThumbRY * 300.0f;
+			sprite2DPosition.x += smoothThumbRX * 280.0f;
+			sprite2DPosition.y -= smoothThumbRY * 280.0f;
 
 			// スプライトの座標変更を反映
 			sprite2DReticle_->SetPosition({ sprite2DPosition.x, sprite2DPosition.y });
