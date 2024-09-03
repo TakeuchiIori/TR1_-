@@ -221,6 +221,7 @@ void Player::TransformReticle() {
 	// スプライトのレティクルに座標設定
 	sprite2DReticle_->SetPosition(Vector2(sprite2DPosition.x, sprite2DPosition.y));
 }
+
 void Player::GetMousePosition() {
 	if (isPad_) {
 		XINPUT_STATE joyState;

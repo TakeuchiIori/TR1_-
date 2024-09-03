@@ -116,6 +116,14 @@ public: // メンバ関数
 	bool CheckAllEnemiesDead() const;
 
 	void IncrementEnemyDefeatedCount(); // 敵を倒した数をインクリメントする
+
+	/// <summary>
+	/// 敵の倒した数に基づき難易度調整
+	/// </summary>
+	void AdjustDifficultyBasedOnDefeats();
+
+
+	
 	
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -188,4 +196,8 @@ private: // メンバ変数
 
 	int enemyDefeatedCount_ = 0; // 敵を倒した数をカウントする変数
 
+	int defeatedCountInLast5Sec_ = 0;
+	float timeElapsed_ = 0.0f;
+	const float kCheckInterval = 5.0f;
+	float deltaTime = 1.0f / 60.0f;
 };

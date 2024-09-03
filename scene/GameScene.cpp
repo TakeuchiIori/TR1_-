@@ -260,6 +260,18 @@ void GameScene::ChangePhase() {
 
 		player_->Update();
 
+		// 5秒ごとの処理
+		timeElapsed_ += deltaTime; // deltaTimeは1フレームごとの経過時間
+		if (timeElapsed_ >= kCheckInterval) {
+			AdjustDifficultyBasedOnDefeats();
+			timeElapsed_ = 0.0f;
+			defeatedCountInLast5Sec_ = 0; // カウントリセット
+		}
+		else if (deltaTime > 5.1) {
+			deltaTime = 0.0f;
+		}
+
+
 		if (player_->IsDead()) {
 			// 死亡演出フェーズに切り替え
 			phaseScene_ = PhaseScene::kDeath;
@@ -273,11 +285,6 @@ void GameScene::ChangePhase() {
 				deathParticles_->Update();
 			}
 		}
-
-		/*if (Count_ == 10) {
-			
-			phaseScene_ = PhaseScene::kClear;
-		} */
 
 		
 		ImGui::Begin("Data");
@@ -354,7 +361,7 @@ bool GameScene::CheckAllEnemiesDead() const {
 }
 void GameScene::IncrementEnemyDefeatedCount() {
 	enemyDefeatedCount_++;
-	// 必要に応じて、敵を倒した数をログに出力するなどの処理を追加
+	defeatedCountInLast5Sec_++; // 5秒間で倒した数を増加
 }
 
 void GameScene::CheackAllCollisions() {
@@ -577,3 +584,26 @@ void GameScene::NextStage() {
 		LoadEnemyPopData(currentStage_);
 	}
 }
+
+void GameScene::AdjustDifficultyBasedOnDefeats() {
+	float difficultyAdjustment = 0.0f;
+
+	// 倒した数が多い場合、難易度を下げる
+	if (defeatedCountInLast5Sec_ >= 10) {
+		difficultyAdjustment = -0.1f;
+	}
+	// 倒した数が少ない場合、難易度を上げる
+	else if (defeatedCountInLast5Sec_ <= 2) {
+		difficultyAdjustment = 0.1f;
+	}
+
+	// ランダム要素を追加 (最低値-0.1、最大値2.0)
+	difficultyAdjustment += -0.1f + static_cast<float>(rand()) / static_cast<float>(RAND_MAX / (1.0f + 0.1f));
+
+	// 敵の各種パラメータに反映
+	for (Enemy* enemy : enemies_) {
+		enemy->AdjustParameters(difficultyAdjustment);
+	}
+}
+
+

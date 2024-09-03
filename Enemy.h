@@ -94,6 +94,8 @@ public:
 	float GetRadius() { return rad; }
 	bool IsDead() const { return isDead_; }
 
+	void AdjustParameters(float difficultyAdjustment);
+
 
 private:
 	Audio* audio_ = nullptr;

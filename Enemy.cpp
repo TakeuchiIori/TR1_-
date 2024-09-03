@@ -2,6 +2,8 @@
 #include "Player.h"
 #include "ImGuiManager.h"
 #include "GameScene.h"
+#include <algorithm>
+#define NOMINMAX
 Enemy::Enemy() {
 	
  }
@@ -60,7 +62,7 @@ void Enemy::InitApproch() {
 void Enemy::Approch() {
 	shotTImer_--;
 	if (shotTImer_ == 0) {
-		//Fire();
+		Fire();
 		shotTImer_ = kFireInterval;
 	}
 	// 移動（ベクトルを加算）
@@ -78,7 +80,7 @@ void Enemy::InitLeave() {
 void Enemy::Leave() {
 	shotTImer_--;
 	if (shotTImer_ == 0) {
-		//Fire();
+		Fire();
 		shotTImer_ = kFireInterval;
 	}
 	 //移動（ベクトルを加算）
@@ -131,4 +133,12 @@ void Enemy::OnCollision() {
 	}
 }
 
+void Enemy::AdjustParameters(float difficultyAdjustment) {
+	// 速度の調整
+	kApprochSpeed.z *= (1.0f + difficultyAdjustment);
+	kLeaveSpeed.z *= (1.0f + difficultyAdjustment);
 
+	// 弾の発射間隔を調整
+	kFireInterval = static_cast<int32_t>(kFireInterval / (1.0f + difficultyAdjustment));
+	kFireInterval = (kFireInterval > 10) ? kFireInterval : 10; // 最低でも10フレーム間隔に制限
+}
