@@ -260,15 +260,16 @@ void GameScene::ChangePhase() {
 
 		player_->Update();
 
-		// 5秒ごとの処理
+		// 5秒ごとの処理を行うためのタイマー
 		timeElapsed_ += deltaTime; // deltaTimeは1フレームごとの経過時間
+
 		if (timeElapsed_ >= kCheckInterval) {
+			// 5秒間で倒した敵の数に基づいて難易度を調整する
 			AdjustDifficultyBasedOnDefeats();
+
+			// 次の5秒を計測するためにカウンタをリセット
 			timeElapsed_ = 0.0f;
 			defeatedCountInLast5Sec_ = 0; // カウントリセット
-		}
-		else if (deltaTime > 5.1) {
-			deltaTime = 0.0f;
 		}
 
 
@@ -287,8 +288,12 @@ void GameScene::ChangePhase() {
 		}
 
 		
-		ImGui::Begin("Data");
+		ImGui::Begin("GameScene");
 		ImGui::DragInt("enemyDefeatedCount_", &enemyDefeatedCount_);
+		ImGui::DragInt("defeatedCountInLast5Sec_", &defeatedCountInLast5Sec_);
+		ImGui::DragFloat("timeElapsed_", &timeElapsed_);
+		ImGui::DragFloat("deltaTime", &deltaTime);
+
 		ImGui::End();
 		break;
 	case PhaseScene::kDeath:
@@ -585,25 +590,29 @@ void GameScene::NextStage() {
 	}
 }
 
+/// <summary>
+/// 敵の倒した数によって難易度調整
+/// </summary>
 void GameScene::AdjustDifficultyBasedOnDefeats() {
 	float difficultyAdjustment = 0.0f;
 
-	// 倒した数が多い場合、難易度を下げる
-	if (defeatedCountInLast5Sec_ >= 10) {
-		difficultyAdjustment = -0.1f;
-	}
-	// 倒した数が少ない場合、難易度を上げる
-	else if (defeatedCountInLast5Sec_ <= 2) {
-		difficultyAdjustment = 0.1f;
+	// 敵を倒した数によって難易度を調整
+	// 倒した数が多い場合、難易度を上げる
+	// 倒した数が少ない場合、難易度を下げる
+	if (defeatedCountInLast5Sec_ >= 2) {
+		difficultyAdjustment = 0.2f;
+	}else if (defeatedCountInLast5Sec_ <= 1) {
+		difficultyAdjustment = -0.2f;
 	}
 
-	// ランダム要素を追加 (最低値-0.1、最大値2.0)
-	difficultyAdjustment += -0.1f + static_cast<float>(rand()) / static_cast<float>(RAND_MAX / (1.0f + 0.1f));
+	float randomAdjustment = -0.2f + static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 0.5f; // -0.1 から 0.1 までのランダム値
+	difficultyAdjustment += randomAdjustment;
 
 	// 敵の各種パラメータに反映
 	for (Enemy* enemy : enemies_) {
 		enemy->AdjustParameters(difficultyAdjustment);
 	}
 }
+
 
 

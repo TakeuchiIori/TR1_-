@@ -198,6 +198,7 @@ private: // メンバ変数
 
 	int defeatedCountInLast5Sec_ = 0;
 	float timeElapsed_ = 0.0f;
-	const float kCheckInterval = 5.0f;
-	float deltaTime = 1.0f / 60.0f;
+	const float kCheckInterval = 300.0f;
+
+	float deltaTime = 1.0f;
 };

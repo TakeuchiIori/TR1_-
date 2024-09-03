@@ -44,8 +44,9 @@ void Enemy::Update() {
 	worldTransform_.matWorld_ = moveMatrix;
 	// 行列を定数バッファに転送
 	worldTransform_.Update();
-	ImGui::Begin("Player");
-	ImGui::DragFloat("3DPlayer", &worldTransform_.translation_.z);
+	ImGui::Begin("Enemy");
+	ImGui::DragFloat("3DEnemy", &worldTransform_.translation_.z);
+	ImGui::DragInt("kFireInterval", &kFireInterval);
 	ImGui::End();
 }
 
@@ -140,5 +141,5 @@ void Enemy::AdjustParameters(float difficultyAdjustment) {
 
 	// 弾の発射間隔を調整
 	kFireInterval = static_cast<int32_t>(kFireInterval / (1.0f + difficultyAdjustment));
-	kFireInterval = (kFireInterval > 10) ? kFireInterval : 10; // 最低でも10フレーム間隔に制限
+	kFireInterval = (std::max)(kFireInterval, 20); // 最低でも20フレーム間隔に制限
 }

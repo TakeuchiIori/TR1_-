@@ -71,10 +71,10 @@ void Player::Update() {
 	}
 	// 行列を定数バッファに転送
 	worldTransform_.Update();
-	ImGui::Begin("Player");
-	ImGui::DragFloat("3DPlayer", &worldTransform_.translation_.z);
-	ImGui::DragFloat("3DReticle_", &worldTransform3DReticle_.translation_.z);
-	ImGui::End();
+	//ImGui::Begin("Player");
+	//ImGui::DragFloat("3DPlayer", &worldTransform_.translation_.z);
+	//ImGui::DragFloat("3DReticle_", &worldTransform3DReticle_.translation_.z);
+	//ImGui::End();
 }
 
 void Player::Draw(ViewProjection& viewProjection) {
